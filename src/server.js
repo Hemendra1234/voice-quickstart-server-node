@@ -79,7 +79,7 @@ function makeCall(request, response) {
     caller_first_name = request.query.caller_first_name;
     caller_last_name = request.query.caller_last_name;
   }
-
+  console.log(request);
   const voiceResponse = new VoiceResponse();
 
   if (!to) {
