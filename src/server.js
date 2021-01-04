@@ -68,10 +68,16 @@ function tokenGenerator(request, response) {
 function makeCall(request, response) {
   // The recipient of the call, a phone number or a client
   var to = null;
+  var caller_first_name = null;
+  var caller_last_name = null;
   if (request.method == 'POST') {
     to = request.body.to;
+    caller_first_name = request.body.caller_first_name;
+    caller_last_name = request.body.caller_last_name;
   } else {
     to = request.query.to;
+    caller_first_name = request.query.caller_first_name;
+    caller_last_name = request.query.caller_last_name;
   }
 
   const voiceResponse = new VoiceResponse();
