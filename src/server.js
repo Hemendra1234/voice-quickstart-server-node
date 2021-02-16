@@ -6,7 +6,7 @@ const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const defaultIdentity = 'alice';
 const callerId = 'client:quick_start';
 // Use a valid Twilio number by adding to your account via https://www.twilio.com/console/phone-numbers/verified
-const callerNumber = '+9196991179910';
+const callerNumber = '+918000401474';
 
 /**
  * Creates an access token with VoiceGrant using your Twilio credentials.
@@ -67,9 +67,11 @@ function tokenGenerator(request, response) {
  */
 function makeCall(request, response) {
   // The recipient of the call, a phone number or a client
+  
   var to = null;
   var caller_first_name = null;
   var caller_last_name = null;
+  const callerId = 'client:'+request.body.caller_first_name+'';
   if (request.method == 'POST') {
     to = request.body.to;
     caller_first_name = request.body.caller_first_name;
@@ -91,7 +93,7 @@ function makeCall(request, response) {
       const dial = voiceResponse.dial({callerId : callerId});
       dial.client(to);
   }
-  console.log('Response:' + voiceResponse.toString());
+ 
   return response.send(voiceResponse.toString());
 }
 
@@ -184,6 +186,36 @@ function isNumber(to) {
   console.log("not a number");
   return false;
 }
+
+ async function getCallHistory(request, response) {
+        // The recipient of the call, a phone number or a client
+        var to = null;
+       to = request.query.to;
+       
+        console.log(to);
+        // The fully qualified URL that should be consulted by Twilio when the call connects.
+        var url = request.protocol + '://' + request.get('host') + '/incoming';
+        console.log(url);
+        const accountSid = process.env.ACCOUNT_SID;
+        const apiKey = process.env.API_KEY;
+        const apiSecret = process.env.API_KEY_SECRET;
+        const client = require('twilio')(accountSid, authToken);
+
+      client.calls.list({limit: 20})
+                  .then(calls => calls.forEach(c => console.log(c.sid)));
+      
+        if (!to) {
+          client.calls('CA42ed11f93dc08b952027ffbc406d0868')
+      .fetch()
+      .then(call => console.log(call.to));
+        } 
+         else {
+          console.log('Test')
+          //call.then(console.log(call.sid));
+          return response.send(call.sid);
+        }
+       
+      }
 
 exports.tokenGenerator = tokenGenerator;
 exports.makeCall = makeCall;
